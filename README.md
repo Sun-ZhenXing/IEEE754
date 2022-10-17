@@ -8,6 +8,8 @@ How IEEE754 floating point numbers are stored？
 
 Inspired by [Tools & Thoughts IEEE-754 Floating Point Converter](https://www.h-schmidt.net/FloatConverter/IEEE754.html) and built with `PySide6`.
 
+For the sake of presentation, the data here is the big-end, in fact, most likely your computer is the small-end of the storage data.
+
 ## Floating point number
 
 $$
@@ -17,7 +19,7 @@ $$
 where:
 - $s$ is `sign`, 1 bit
 - $e$ is `exponent`, 8 bit (`float`), or 11 bit (`double`)
-- $m$ is `mantissa`, 23 bit (`float`) or 52 bit (`double`), is fixed-point number in $[0,\,1)$
+- $m$ is `mantissa`, 23 bit (`float`) or 52 bit (`double`), is fixed-point number in $[0, 1)$
 - $B = 2^7 - 1 = 127$ when `float`
 - $B = 2^{10} - 1 = 1023$ when `double`
 

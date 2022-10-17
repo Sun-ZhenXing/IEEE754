@@ -15,33 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="12" column="0">
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>106</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item row="5" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>104</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="4" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLCDNumber" name="lcdFloatSign">
@@ -142,14 +116,87 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelFloat">
-      <property name="text">
-       <string>IEEE 754 Float</string>
+    <item row="6" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>104</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLineEdit" name="lineFloat">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="maxLength">
+       <number>127</number>
       </property>
      </widget>
     </item>
-    <item row="8" column="0">
+    <item row="14" column="0">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>106</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="labelDouble">
+      <property name="text">
+       <string>Double</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLineEdit" name="lineDoubleHex">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: #444;color: #fff</string>
+      </property>
+      <property name="inputMask">
+       <string>&gt;HH-HH-HH-HH-HH-HH-HH-HH;_</string>
+      </property>
+      <property name="text">
+       <string>00-00-00-00-00-00-00-00</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLineEdit" name="lineFloatStored">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="statusTip">
+       <string>Stored value</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
      <widget class="QLineEdit" name="lineDoubleBin">
       <property name="font">
        <font>
@@ -165,30 +212,6 @@
       </property>
       <property name="text">
        <string>00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QLineEdit" name="lineDouble">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="maxLength">
-       <number>127</number>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLineEdit" name="lineFloat">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="maxLength">
-       <number>127</number>
       </property>
      </widget>
     </item>
@@ -211,26 +234,26 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QLineEdit" name="lineFloatHex">
-      <property name="font">
-       <font>
-        <family>Consolas</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background: #444;color: #fff</string>
-      </property>
-      <property name="inputMask">
-       <string>&gt;HH-HH-HH-HH;_</string>
-      </property>
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelFloat">
       <property name="text">
-       <string>00-00-00-00</string>
+       <string>IEEE 754 Float</string>
       </property>
      </widget>
     </item>
-    <item row="10" column="0">
+    <item row="8" column="0">
+     <widget class="QLineEdit" name="lineDouble">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="maxLength">
+       <number>127</number>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLCDNumber" name="lcdDoubleSign">
@@ -325,15 +348,8 @@
       </item>
      </layout>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="labelDouble">
-      <property name="text">
-       <string>Double</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="0">
-     <widget class="QLineEdit" name="lineDoubleHex">
+    <item row="3" column="0">
+     <widget class="QLineEdit" name="lineFloatHex">
       <property name="font">
        <font>
         <family>Consolas</family>
@@ -344,10 +360,26 @@
        <string notr="true">background: #444;color: #fff</string>
       </property>
       <property name="inputMask">
-       <string>&gt;HH-HH-HH-HH-HH-HH-HH-HH;_</string>
+       <string>&gt;HH-HH-HH-HH;_</string>
       </property>
       <property name="text">
-       <string>00-00-00-00-00-00-00-00</string>
+       <string>00-00-00-00</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="0">
+     <widget class="QLineEdit" name="lineDoubleStored">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="statusTip">
+       <string>Stored value</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -369,9 +401,11 @@
   <tabstop>lineFloat</tabstop>
   <tabstop>lineFloatBin</tabstop>
   <tabstop>lineFloatHex</tabstop>
+  <tabstop>lineFloatStored</tabstop>
   <tabstop>lineDouble</tabstop>
   <tabstop>lineDoubleBin</tabstop>
   <tabstop>lineDoubleHex</tabstop>
+  <tabstop>lineDoubleStored</tabstop>
  </tabstops>
  <resources/>
  <connections>

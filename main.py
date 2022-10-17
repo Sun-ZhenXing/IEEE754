@@ -1,30 +1,15 @@
+from ctypes import c_double, c_float
 import sys
-from ctypes import POINTER, c_char_p, c_double, c_float, cast, sizeof
-from typing import TypeVar, Union
 
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from ui_float import Ui_MainWindow
+from utils import bin_str_to_ctypes, check_system, ctypes_to_str, hex_str_to_ctypes
 
-_T = TypeVar('_T')
-
-
-def cast_bytes(data_bytes: bytes, ctype: type[_T]) -> _T:
-    """Cast bytes to a ctype"""
-    assert len(data_bytes) >= sizeof(ctype)
-    return cast(
-        c_char_p(data_bytes),
-        POINTER(ctype)
-    ).contents
-
-
-def bin_str_to_hex(data: str) -> str:
-    """Convert a binary string to a hex string"""
-    return ''.join(
-        f'{int(part, 2):02x}'
-        for part in data.split('-')[::-1]
-    )
+LINE_VALUE = 0
+LINE_BIN = 1
+LINE_HEX = 2
 
 
 class MainWindow(QMainWindow):
@@ -32,6 +17,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self._ui = Ui_MainWindow()
         self._ui.setupUi(self)
+        check_system()
+
         self._ui.lineFloat.setText('0.0')
         self._ui.lineDouble.setText('0.0')
 
@@ -43,51 +30,45 @@ class MainWindow(QMainWindow):
         self._ui.lineFloatHex.blockSignals(block)
         self._ui.lineDoubleHex.blockSignals(block)
 
-    def setFloat(self, value: Union[c_float, float], event_type: int = 0):
+    def setFloat(self, value: c_float, event_type: int = LINE_VALUE):
         self.setBlock(True)
-        if isinstance(value, float):
-            value = c_float(value)
-        view = memoryview(value)
-        view_bytes = view.tobytes()[::-1]
-        bin_text = ''.join(f'{b:08b}' for b in view_bytes)
-        if event_type != 0:
+        bin_text, hex_text = ctypes_to_str(value)
+        if event_type != LINE_VALUE:
             self._ui.lineFloat.setText(str(value.value))
-        if event_type != 1:
+        if event_type != LINE_BIN:
             self._ui.lineFloatBin.setText(bin_text)
-        if event_type != 2:
-            self._ui.lineFloatHex.setText(view_bytes.hex())
+        if event_type != LINE_HEX:
+            self._ui.lineFloatHex.setText(hex_text)
         self._ui.lcdFloatSign.display(bin_text[0])
         self._ui.lcdFloatExponent.display(bin_text[1:9])
         self._ui.lcdFloatMantissa.display(bin_text[9:])
+        self._ui.lineFloatStored.setText(str(value.value))
         self.setBlock(False)
 
-    def setDouble(self, value: Union[c_float, float], event_type: int = 0):
+    def setDouble(self, value: c_double, event_type: int = LINE_VALUE):
         self.setBlock(True)
-        if isinstance(value, float):
-            value = c_double(value)
-        view = memoryview(value)
-        view_bytes = view.tobytes()[::-1]
-        bin_text = ''.join(f'{b:08b}' for b in view_bytes)
-        if event_type != 0:
+        bin_text, hex_text = ctypes_to_str(value)
+        if event_type != LINE_VALUE:
             self._ui.lineDouble.setText(str(value.value))
-        if event_type != 1:
+        if event_type != LINE_BIN:
             self._ui.lineDoubleBin.setText(bin_text)
-        if event_type != 2:
-            self._ui.lineDoubleHex.setText(view_bytes.hex())
+        if event_type != LINE_HEX:
+            self._ui.lineDoubleHex.setText(hex_text)
         self._ui.lcdDoubleSign.display(bin_text[0])
         self._ui.lcdDoubleExponent.display(bin_text[1:12])
         self._ui.lcdDoubleMantissa.display(bin_text[12:])
+        self._ui.lineDoubleStored.setText(str(value.value))
         self.setBlock(False)
 
     @Slot(str)
     def floatChange(self, text: str):
         value = None
         try:
-            value = float(text)
+            value = c_float(float(text))
         except ValueError:
             pass
         if value is not None:
-            self.setFloat(value, 0)
+            self.setFloat(value, LINE_VALUE)
 
     @Slot(str)
     def floatChangeBin(self, text: str):
@@ -95,13 +76,11 @@ class MainWindow(QMainWindow):
             return None
         value = None
         try:
-            value = cast_bytes(bytes.fromhex(
-                bin_str_to_hex(text)
-            ), c_float)
-        except KeyboardInterrupt:
+            value = bin_str_to_ctypes(text, c_float)
+        except ValueError:
             pass
         if value is not None:
-            self.setFloat(value, 1)
+            self.setFloat(value, LINE_BIN)
 
     @Slot(str)
     def floatChangeHex(self, text: str):
@@ -109,23 +88,21 @@ class MainWindow(QMainWindow):
             return None
         value = None
         try:
-            value = cast_bytes(bytes.fromhex(
-                ''.join(text.split('-')[::-1])
-            ), c_float)
-        except KeyboardInterrupt:
+            value = hex_str_to_ctypes(text, c_float)
+        except ValueError:
             pass
         if value is not None:
-            self.setFloat(value, 2)
+            self.setFloat(value, LINE_HEX)
 
     @Slot(str)
     def doubleChange(self, text: str):
         value = None
         try:
-            value = float(text)
+            value = c_double(float(text))
         except ValueError:
             pass
         if value is not None:
-            self.setDouble(value, 0)
+            self.setDouble(value, LINE_VALUE)
 
     @Slot(str)
     def doubleChangeBin(self, text: str):
@@ -133,13 +110,11 @@ class MainWindow(QMainWindow):
             return None
         value = None
         try:
-            value = cast_bytes(bytes.fromhex(
-                bin_str_to_hex(text)
-            ), c_double)
+            value = bin_str_to_ctypes(text, c_double)
         except ValueError:
             pass
         if value is not None:
-            self.setDouble(value, 1)
+            self.setDouble(value, LINE_BIN)
 
     @Slot(str)
     def doubleChangeHex(self, text: str):
@@ -147,13 +122,11 @@ class MainWindow(QMainWindow):
             return None
         value = None
         try:
-            value = cast_bytes(bytes.fromhex(
-                ''.join(text.split('-')[::-1])
-            ), c_double)
+            value = hex_str_to_ctypes(text, c_double)
         except ValueError:
             pass
         if value is not None:
-            self.setDouble(value, 2)
+            self.setDouble(value, LINE_HEX)
 
 
 if __name__ == "__main__":
